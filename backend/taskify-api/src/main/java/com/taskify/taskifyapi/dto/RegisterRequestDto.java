@@ -16,7 +16,7 @@ public class RegisterRequestDto {
 
     @NotBlank(message = "User name is required")
     @Size(min = 3, message = "User name must be at least 3 characters")
-    private String userName;
+    private String name;
 
     @NotBlank(message = "Email is required")
     @Email(message = "Invalid email format")

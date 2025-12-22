@@ -34,7 +34,7 @@ public class UserServiceImpl implements UserService {
     @Override
     public UserResponseDto register(RegisterRequestDto registerRequestDto) {
         User user = new User();
-        user.setUserName(registerRequestDto.getUserName());
+        user.setUserName(registerRequestDto.getName());
         user.setEmail(registerRequestDto.getEmail());
         user.setPassword(registerRequestDto.getPassword());
         
@@ -52,7 +52,7 @@ public class UserServiceImpl implements UserService {
         User user = userRepository.findById(userId).orElseThrow(
                 () -> new UserNotFoundException("Invalid user id : " + userId));
         
-        if (registerRequestDto.getUserName() != null) user.setUserName(registerRequestDto.getUserName());
+        if (registerRequestDto.getName() != null) user.setUserName(registerRequestDto.getName());
         if (registerRequestDto.getEmail() != null) user.setEmail(registerRequestDto.getEmail());
         if (registerRequestDto.getPassword() != null) user.setPassword(registerRequestDto.getPassword());
         

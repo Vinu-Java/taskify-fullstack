@@ -9,4 +9,6 @@ import org.springframework.data.jpa.repository.JpaRepository;
 
 public interface TodoRepository extends JpaRepository<Todo, Long> {
     Page<Todo> findByUserId(Long id, Pageable pageable);
+
+    Page<Todo> findByUserIdAndTitleContainingIgnoreCaseOrUserIdAndDescriptionContainingIgnoreCase(Long userId1, String title, Long userId2, String description, Pageable pageable);
 }

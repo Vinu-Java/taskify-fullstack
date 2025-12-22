@@ -26,5 +26,4 @@ public class TodoResponseDto {
     private Priority priority;
     private LocalDateTime createdAt;
     private LocalDateTime updatedAt;
-
 }

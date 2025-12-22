@@ -3,6 +3,7 @@ package com.taskify.taskifyapi.dto;
 import com.taskify.taskifyapi.enums.Priority;
 import com.taskify.taskifyapi.enums.Status;
 import jakarta.validation.constraints.Future;
+import jakarta.validation.constraints.FutureOrPresent;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;
 import lombok.AllArgsConstructor;
@@ -26,7 +27,7 @@ public class TodoRequestDto {
     @NotNull(message = "Status is required")
     private Status status;
 
-    @Future(message = "Due date must be in the future")
+    @FutureOrPresent(message = "Due date must be in the future")
     @NotNull(message = "Due date is required")
     private LocalDate dueDate;
 

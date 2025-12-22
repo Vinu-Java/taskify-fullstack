@@ -26,20 +26,19 @@ public class TodoServiceImpl implements TodoService {
     }
 
     @Override
-    public Page<TodoResponseDto> getTodos(Long userId, int pageNumber, int pageSize) {
+    public Page<TodoResponseDto> getTodos(Long userId, String searchText, int pageNumber, int pageSize) {
         Pageable pageable = PageRequest.of(pageNumber, pageSize);
-        Page<Todo> todos = todoRepository.findByUserId(userId, pageable);
 
-        return todos.map(todo -> new TodoResponseDto(
-                todo.getId(),
-                todo.getTitle(),
-                todo.getDescription(),
-                todo.getStatus(),
-                todo.getDueDate(),
-                todo.getPriority(),
-                todo.getCreatedAt(),
-                todo.getUpdatedAt()
-        ));
+        searchText = (searchText == null) ? "" : searchText.trim();
+
+        Page<Todo> todos;
+        if (searchText.isEmpty()) {
+            todos = todoRepository.findByUserId(userId, pageable);
+        } else {
+            todos = todoRepository.findByUserIdAndTitleContainingIgnoreCaseOrUserIdAndDescriptionContainingIgnoreCase(userId, searchText, userId, searchText, pageable);
+        }
+
+        return todos.map(this::mapToDto);
     }
 
     @Override
@@ -55,18 +54,7 @@ public class TodoServiceImpl implements TodoService {
         todo.setPriority(todoRequestDto.getPriority());
         todo.setUser(user);
 
-        Todo newTodo = todoRepository.save(todo);
-
-        return new TodoResponseDto(
-                newTodo.getId(),
-                newTodo.getTitle(),
-                newTodo.getDescription(),
-                newTodo.getStatus(),
-                newTodo.getDueDate(),
-                newTodo.getPriority(),
-                newTodo.getCreatedAt(),
-                newTodo.getUpdatedAt()
-        );
+        return mapToDto(todoRepository.save(todo));
     }
 
     @Transactional
@@ -81,16 +69,7 @@ public class TodoServiceImpl implements TodoService {
         if (todoRequestDto.getDueDate() != null) todo.setDueDate(todoRequestDto.getDueDate());
         if (todoRequestDto.getPriority() != null) todo.setPriority(todoRequestDto.getPriority());
 
-        return new TodoResponseDto(
-                todo.getId(),
-                todo.getTitle(),
-                todo.getDescription(),
-                todo.getStatus(),
-                todo.getDueDate(),
-                todo.getPriority(),
-                todo.getCreatedAt(),
-                todo.getUpdatedAt()
-        );
+        return mapToDto(todo);
     }
 
     @Override
@@ -100,5 +79,21 @@ public class TodoServiceImpl implements TodoService {
 
         todoRepository.delete(todo);
     }
+
+    private TodoResponseDto mapToDto(Todo todo) {
+        TodoResponseDto dto = new TodoResponseDto();
+
+        dto.setId(todo.getId());
+        dto.setTitle(todo.getTitle());
+        dto.setDescription(todo.getDescription());
+        dto.setStatus(todo.getStatus());
+        dto.setDueDate(todo.getDueDate());
+        dto.setPriority(todo.getPriority());
+        dto.setCreatedAt(todo.getCreatedAt());
+        dto.setUpdatedAt(todo.getUpdatedAt());
+
+        return dto;
+    }
+
 
 }

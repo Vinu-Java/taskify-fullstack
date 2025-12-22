@@ -66,7 +66,7 @@ public class GlobalExceptionHandler {
     @ExceptionHandler(Exception.class)
     public ResponseEntity<ErrorResponse> handleGlobal(Exception e) {
         ErrorResponse response = new ErrorResponse(
-                "Something went wrong. " + e.getMessage(),
+                "Something went wrong in the server. " + e.getMessage(),
                 HttpStatus.INTERNAL_SERVER_ERROR.value(),
                 LocalDateTime.now()
         );

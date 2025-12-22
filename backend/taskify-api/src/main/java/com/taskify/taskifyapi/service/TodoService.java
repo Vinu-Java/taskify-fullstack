@@ -5,7 +5,7 @@ import com.taskify.taskifyapi.dto.TodoResponseDto;
 import org.springframework.data.domain.Page;
 
 public interface TodoService {
-    Page<TodoResponseDto> getTodos(Long userId, int pageNumber, int pageSize);
+    Page<TodoResponseDto> getTodos(Long userId, String searchText, int pageNumber, int pageSize);
 
     TodoResponseDto addTodo(Long userId, TodoRequestDto todoRequestDto);
 
