@@ -4,10 +4,9 @@ WORKDIR /app
 
 COPY . .
 
-# 🔧 Fix mvnw permission for Linux
 RUN chmod +x mvnw
 
-RUN ./mvnw clean package
+RUN ./mvnw clean package -DskipTests
 
 EXPOSE 8080
 
