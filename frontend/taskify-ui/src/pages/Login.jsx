@@ -1,5 +1,5 @@
 import { useState } from "react";
-import { useNavigate, Link } from "react-router-dom";
+import { useNavigate, Link, Navigate } from "react-router-dom";
 import { loginUser } from "../services/authApi";
 import { toast } from "react-toastify";
 
@@ -8,18 +8,25 @@ export default function Login() {
   const [password, setPassword] = useState("");
   const [loading, setLoading] = useState(false);
   const navigate = useNavigate();
+  const userId = localStorage.getItem("userId");
+
+  if (userId) {
+    return <Navigate to="/todos" replace />;
+  }
 
   const handleLogin = async () => {
     if (!email || !password) {
       toast.error("Email and password are required");
       return;
     }
+
     try {
+      // e.preventDefault();
       setLoading(true);
       const data = await loginUser({ email, password });
       localStorage.setItem("userId", data.userId);
       localStorage.setItem("userName", data.userName);
-      navigate("/todos");
+      navigate("/todos", { replace: true });
     } catch (err) {
       toast.error(err.response?.data?.message || "Invalid email or password");
     } finally {

@@ -29,7 +29,7 @@ export default function Register() {
       localStorage.setItem("userName", res.userName);
 
       toast.success("Registration successful.");
-      navigate("/todos");
+      navigate("/todos", { replace: true });
     } catch (error) {
       const msg =
         error?.response?.data?.message ||

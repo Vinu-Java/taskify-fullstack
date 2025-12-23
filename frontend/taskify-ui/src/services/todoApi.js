@@ -1,8 +1,7 @@
 import api from "./apiClient";
 
-const userId = localStorage.getItem("userId");
-
 export const getTodos = async ({ search, page, size }) => {
+  const userId = localStorage.getItem("userId");
   const response = await api.get(`/todos/user/${userId}`, {
     params: { search, page, size },
   });
@@ -10,6 +9,7 @@ export const getTodos = async ({ search, page, size }) => {
 };
 
 export const addTodo = async (todo) => {
+  const userId = localStorage.getItem("userId");
   const response = await api.post(`/todos/user/${userId}`, todo);
   return response.data;
 };

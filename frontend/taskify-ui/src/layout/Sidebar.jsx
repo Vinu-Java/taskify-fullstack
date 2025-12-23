@@ -6,7 +6,7 @@ export default function Sidebar() {
 
   const handleLogout = () => {
     localStorage.clear();
-    navagate("/login");
+    navagate("/login", { replace: true });
   };
 
   return (
