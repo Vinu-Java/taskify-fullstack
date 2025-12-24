@@ -1,5 +1,6 @@
 package com.taskify.taskifyapi.dto;
 
+import com.taskify.taskifyapi.enums.Priority;
 import com.taskify.taskifyapi.enums.Status;
 import jakarta.validation.constraints.FutureOrPresent;
 import jakarta.validation.constraints.NotBlank;
@@ -9,7 +10,7 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 
-import java.time.Instant;
+import java.time.LocalDate;
 
 @Getter
 @Setter
@@ -27,9 +28,9 @@ public class TodoRequestDto {
 
     @FutureOrPresent(message = "Due date must be in the future")
     @NotNull(message = "Due date is required")
-    private Instant dueDate;
+    private LocalDate dueDate;
 
     @NotNull(message = "Priority is required")
-    private Instant priority;
+    private Priority priority;
 
 }
