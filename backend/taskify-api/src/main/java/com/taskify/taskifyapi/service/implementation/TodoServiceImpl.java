@@ -69,7 +69,8 @@ public class TodoServiceImpl implements TodoService {
         if (todoRequestDto.getDueDate() != null) todo.setDueDate(todoRequestDto.getDueDate());
         if (todoRequestDto.getPriority() != null) todo.setPriority(todoRequestDto.getPriority());
 
-        return mapToDto(todo);
+        Todo savedTodo = todoRepository.save(todo);
+        return mapToDto(savedTodo);
     }
 
     @Override
@@ -94,6 +95,5 @@ public class TodoServiceImpl implements TodoService {
 
         return dto;
     }
-
 
 }
