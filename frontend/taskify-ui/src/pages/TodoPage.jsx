@@ -1,4 +1,4 @@
-import { useEffect, useState } from "react";
+import { useCallback, useEffect, useState } from "react";
 import TodoList from "../components/TodoList";
 import { getTodos, addTodo, updateTodo, deleteTodo } from "../services/todoApi";
 import { useNavigate, useOutletContext } from "react-router-dom";
@@ -13,36 +13,36 @@ export default function TodoPage() {
   const navigate = useNavigate();
   const userId = localStorage.getItem("userId");
 
-  useEffect(() => {
-    if (!userId) {
-      navigate("/login");
-      return;
-    }
-    loadTodos();
-  }, [search, page]);
-
-  useEffect(() => {
-    setPage(0);
-  }, [search]);
-
-  const loadTodos = async () => {
+  const loadTodos = useCallback(async () => {
     try {
       const response = await getTodos({
         search,
         page,
         size: 5,
       });
-
       setTodos(response.content);
       setTotalPages(response.totalPages);
     } catch (err) {
       toast.error(err.message || "Failed to load todos");
     }
-  };
+  }, [search, page]);
+
+  useEffect(() => {
+    if (!userId) {
+      navigate("/login");
+      return;
+    }
+    loadTodos();
+  }, [loadTodos, userId, navigate]);
+
+  useEffect(() => {
+    setPage(0);
+  }, [search]);
 
   const addNewTodo = async (todo) => {
     try {
       await addTodo(todo);
+      toast.success("Todo added");
       loadTodos();
     } catch (err) {
       toast.error(err.message);
@@ -60,10 +60,9 @@ export default function TodoPage() {
       };
 
       const savedTodo = await updateTodo(updatedTodo.id, payload);
+      toast.success("Todo updated");
 
-      setTodos((prev) =>
-        prev.map((todo) => (todo.id === savedTodo.id ? savedTodo : todo))
-      );
+      loadTodos();
     } catch (err) {
       toast.error(err.message);
     }
@@ -72,6 +71,7 @@ export default function TodoPage() {
   const handleDelete = async (id) => {
     try {
       await deleteTodo(id);
+      toast.success("Todo deleted");
       setTodos((prev) => prev.filter((todo) => todo.id !== id));
     } catch (err) {
       toast.error(err.message);

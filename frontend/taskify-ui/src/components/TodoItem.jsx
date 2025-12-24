@@ -132,7 +132,9 @@ export default function TodoItem({ todo, search, handleEdit, handleDelete }) {
               </div>
 
               <p>
-                {showMore ? highlightText(todo.description, search) : highlightText(shortDescription, search)}
+                {showMore
+                  ? highlightText(todo.description, search)
+                  : highlightText(shortDescription, search)}
                 {isLongDesc && (
                   <button
                     className="more-btn"
@@ -143,9 +145,9 @@ export default function TodoItem({ todo, search, handleEdit, handleDelete }) {
                 )}
               </p>
 
-              <small>Created: {formatDateTime(todo.createdAt)}</small>
-             
-              <small>Updated: {formatDateTime(todo.updatedAt)}</small>
+              <small>Created: {formatDateTime(todo.createdAt.toLocaleString("en-IN"))}</small>
+
+              <small>Updated: {formatDateTime(todo.updatedAt.toLocaleString("en-IN"))}</small>
 
               <div className="edit-actions">
                 <button
