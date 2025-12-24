@@ -1,9 +1,15 @@
 import { useEffect, useState } from "react";
 
+function escapeRegExp(text) {
+  return text.replace(/[.*+?^${}()|[\]\\]/g, "\\$&");
+}
+
 function highlightText(text, search) {
   if (!search) return text;
 
-  const regex = new RegExp(`(${search})`, "gi");
+  const safeSearch = escapeRegExp(search);
+  const regex = new RegExp(`(${safeSearch})`, "gi");
+
   return text.split(regex).map((part, index) =>
     part.toLowerCase() === search.toLowerCase() ? (
       <span key={index} className="highlight">
@@ -20,13 +26,14 @@ export default function TodoItem({ todo, search, handleEdit, handleDelete }) {
   const [editedTodo, setEditedTodo] = useState(todo);
   const [isEditing, setIsEditing] = useState(false);
 
-  const isLongDesc = todo.description.length > 40;
+  const description = todo.description || "";
+  const isLongDesc = description.length > 40;
   const shortDescription = isLongDesc
-    ? todo.description.substring(0, 40) + "..."
-    : todo.description;
+    ? description.substring(0, 40) + "..."
+    : description;
 
   useEffect(() => {
-    if (isEditing) {
+    if (!isEditing) {
       setEditedTodo(todo);
     }
   }, [isEditing, todo]);
@@ -44,7 +51,7 @@ export default function TodoItem({ todo, search, handleEdit, handleDelete }) {
   };
 
   const formatDateTime = (dateTime) =>
-    new Date(dateTime).toLocaleString("en-GB", {
+    new Date(dateTime).toLocaleString("en-IN", {
       day: "2-digit",
       month: "2-digit",
       year: "numeric",
@@ -133,7 +140,7 @@ export default function TodoItem({ todo, search, handleEdit, handleDelete }) {
 
               <p>
                 {showMore
-                  ? highlightText(todo.description, search)
+                  ? highlightText(description, search)
                   : highlightText(shortDescription, search)}
                 {isLongDesc && (
                   <button
@@ -145,9 +152,9 @@ export default function TodoItem({ todo, search, handleEdit, handleDelete }) {
                 )}
               </p>
 
-              <small>Created: {formatDateTime(todo.createdAt.toLocaleString("en-IN"))}</small>
+              <small>Created: {formatDateTime(todo.createdAt)}</small>
 
-              <small>Updated: {formatDateTime(todo.updatedAt.toLocaleString("en-IN"))}</small>
+              <small>Updated: {formatDateTime(todo.updatedAt)}</small>
 
               <div className="edit-actions">
                 <button
