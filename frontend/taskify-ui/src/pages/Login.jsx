@@ -14,14 +14,14 @@ export default function Login() {
     return <Navigate to="/todos" replace />;
   }
 
-  const handleLogin = async () => {
+  const handleLogin = async (e) => {
+    e.preventDefault();
     if (!email || !password) {
       toast.error("Email and password are required");
       return;
     }
 
     try {
-      // e.preventDefault();
       setLoading(true);
       const data = await loginUser({ email, password });
       localStorage.setItem("userId", data.userId);
@@ -36,28 +36,30 @@ export default function Login() {
   return (
     <>
       <div className="auth-box">
-        <h2>Login</h2>
+        <form onSubmit={handleLogin}>
+          <h2>Login</h2>
 
-        <input
-          placeholder="email"
-          type="email"
-          value={email}
-          onChange={(e) => setEmail(e.target.value)}
-        />
+          <input
+            placeholder="email"
+            type="email"
+            value={email}
+            onChange={(e) => setEmail(e.target.value)}
+          />
 
-        <input
-          placeholder="password"
-          type="password"
-          value={password}
-          onChange={(e) => setPassword(e.target.value)}
-        />
+          <input
+            placeholder="password"
+            type="password"
+            value={password}
+            onChange={(e) => setPassword(e.target.value)}
+          />
 
-        <button onClick={handleLogin} disabled={loading}>
-          Login
-        </button>
-        <p>
-          Don't have an account? <Link to="/register">Register</Link>
-        </p>
+          <button type="submit" disabled={loading}>
+            {loading ? "Logging in..." : "Login"}
+          </button>
+          <p>
+            Don't have an account? <Link to="/register">Register</Link>
+          </p>
+        </form>
       </div>
     </>
   );
